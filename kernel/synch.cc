@@ -76,8 +76,25 @@ Semaphore::~Semaphore()
 //----------------------------------------------------------------------
 void
 Semaphore::P() {
+  
+  #ifndef ETUDIANTS_TP
   printf("**** Warning: method Semaphore::P is not implemented yet\n");
   exit(-1);
+  #endif
+  
+  #ifdef ETUDIANTS_TP
+  if (g_machine->interrupt->GetStatus() == INTERRUPTS_ON) { // ensure atomicity of checks and for Thread::Sleep
+  	g_machine->interrupt->SetStatus(INTERRUPTS_OFF);
+  }
+  
+  if (value <= 0) {
+  	queue.Append(g_current_thread);
+  	g_current_thread->Sleep(void);
+  } else {
+  	value--;
+  }
+  g_machine->interrupt->SetStatus(INTERRUPTS_ON);
+  #endif
 }
 
 //----------------------------------------------------------------------
@@ -90,8 +107,23 @@ Semaphore::P() {
 //----------------------------------------------------------------------
 void
 Semaphore::V() {
-   printf("**** Warning: method Semaphore::V is not implemented yet\n");
+	#ifndef ETUDIANTS_TP
+	printf("**** Warning: method Semaphore::V is not implemented yet\n");
     exit(-1);
+    #endif
+    
+    #ifdef ETUDIANTS_TP
+    if (g_machine->interrupt->GetStatus() == INTERRUPTS_ON) { // ensure atomicity of checks and for Scheduler::ReadyToRun()
+		g_machine->interrupt->SetStatus(INTERRUPTS_OFF);
+  	}
+  	
+  	value++;
+  	if (!queue.IsEmpty() && value > 0) {
+  		g_scheduler->ReadyToRun(queue.Remove());
+  	}
+	g_machine->interrupt->SetStatus(INTERRUPTS_ON);
+  	
+    #endif
 }
 
 //----------------------------------------------------------------------
