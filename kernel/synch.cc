@@ -88,7 +88,7 @@ Semaphore::P() {
   }
   
   if (value <= 0) {
-  	queue.Append(g_current_thread);
+  	queue->Append(g_current_thread);
   	g_current_thread->Sleep(void);
   } else {
   	value--;
@@ -118,8 +118,8 @@ Semaphore::V() {
   	}
   	
   	value++;
-  	if (!queue.IsEmpty() && value > 0) {
-  		g_scheduler->ReadyToRun(queue.Remove());
+  	if (!queue->IsEmpty() && value > 0) {
+  		g_scheduler->ReadyToRun(queue->Remove());
   	}
 	g_machine->interrupt->SetStatus(INTERRUPTS_ON);
   	
