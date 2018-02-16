@@ -1,7 +1,7 @@
-/*! \file synch.cc 
-//  \brief Routines for synchronizing threads.  
+/*! \file synch.cc
+//  \brief Routines for synchronizing threads.
 //
-//      Three kinds of synchronization routines are defined here: 
+//      Three kinds of synchronization routines are defined here:
 //      semaphores, locks and condition variables.
 //
 // Any implementation of a synchronization routine needs some
@@ -18,7 +18,7 @@
 // that be disabled or enabled).
 */
 // Copyright (c) 1992-1993 The Regents of the University of California.
-// All rights reserved.  See copyright.h for copyright notice and limitation 
+// All rights reserved.  See copyright.h for copyright notice and limitation
 // of liability and disclaimer of warranty provisions.
 
 
@@ -136,25 +136,25 @@ Lock::~Lock() {
 */
 //----------------------------------------------------------------------
 void Lock::Acquire() {
-   
+
    #ifndef ETUDIANTS_TP
    printf("**** Warning: method Lock::Acquire is not implemented yet\n");
     exit(-1);
    #endif
-   
+
 	#ifdef ETUDIANTS_TP
 	if (g_machine->interrupt->GetStatus() == INTERRUPTS_ON) {
 		g_machine->interrupt->SetStatus(INTERRUPTS_OFF);
 	}
-	
+
 	if (free) {
 		free = false;
 		owner = g_current_thread;
 	} else {
-		sleepqueue.Append(g_current_thread);
-		g_current_thread->Sleep(void);
+		sleepqueue->Append(g_current_thread);
+		g_current_thread->Sleep();
 	}
-	
+
 	g_machine->interrupt->SetStatus(INTERRUPTS_ON);
 	#endif
 }
@@ -169,28 +169,28 @@ void Lock::Acquire() {
 */
 //----------------------------------------------------------------------
 void Lock::Release() {
-	
+
 	#ifndef ETUDIANTS_TP
     printf("**** Warning: method Lock::Release is not implemented yet\n");
     exit(-1);
     #endif
-    
+
     #ifdef ETUDIANTS_TP
     if (g_machine->interrupt->GetStatus() == INTERRUPTS_ON) {
 		g_machine->interrupt->SetStatus(INTERRUPTS_OFF);
 	}
-	
+
 	if (isHeldByCurrentThread()) {
-		if (sleepqueue.IsEmpty()) {
+		if (sleepqueue->IsEmpty()) {
 			free = true;
 			owner = NULL;
 		} else {
-			Thread *nextOwner = (Thread*) sleepqueue.Remove();
+			Thread *nextOwner = (Thread*) sleepqueue->Remove();
 			owner = nextOwner;
 			g_scheduler->ReadyToRun(nextOwner);
 		}
 	}
-	
+
 	g_machine->interrupt->SetStatus(INTERRUPTS_ON);
     #endif
 }
@@ -200,7 +200,7 @@ void Lock::Release() {
 /*! To check if current thread hold the lock
 */
 //----------------------------------------------------------------------
-bool Lock::isHeldByCurrentThread() {return (g_current_thread == owner);}	
+bool Lock::isHeldByCurrentThread() {return (g_current_thread == owner);}
 
 //----------------------------------------------------------------------
 // Condition::Condition
@@ -209,7 +209,7 @@ bool Lock::isHeldByCurrentThread() {return (g_current_thread == owner);}
 //    \param  "debugName" is an arbitrary name, useful for debugging.
 */
 //----------------------------------------------------------------------
-Condition::Condition(char* debugName) { 
+Condition::Condition(char* debugName) {
   name = new char[strlen(debugName)+1];
   strcpy(name,debugName);
   waitqueue = new Listint;
@@ -233,9 +233,9 @@ Condition::~Condition() {
 // Condition::Wait
 /*! Block the calling thread (put it in the wait queue).
 //  This operation must be atomic, so we need to disable interrupts.
-*/	
+*/
 //----------------------------------------------------------------------
-void Condition::Wait() { 
+void Condition::Wait() {
     printf("**** Warning: method Condition::Wait is not implemented yet\n");
     exit(-1);
 }
@@ -243,11 +243,11 @@ void Condition::Wait() {
 //----------------------------------------------------------------------
 // Condition::Signal
 
-/*! Wake up the first thread of the wait queue (if any). 
+/*! Wake up the first thread of the wait queue (if any).
 // This operation must be atomic, so we need to disable interrupts.
 */
 //----------------------------------------------------------------------
-void Condition::Signal() { 
+void Condition::Signal() {
     printf("**** Warning: method Condition::Signal is not implemented yet\n");
     exit(-1);
 }
@@ -258,7 +258,7 @@ void Condition::Signal() {
 // This operation must be atomic, so we need to disable interrupts.
 */
 //----------------------------------------------------------------------
-void Condition::Broadcast() { 
+void Condition::Broadcast() {
   printf("**** Warning: method Condition::Broadcast is not implemented yet\n");
   exit(-1);
 }
