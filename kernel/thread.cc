@@ -23,8 +23,8 @@
 #define UNSIGNED_LONG_AT_ADDR(addr) (*((unsigned long int*)(addr)))
 
 #define STACK_FENCEPOST 0xdeadbeef	// this is put at the end of the
-					// simulator stack, for detecting
-					// stack overflows
+// simulator stack, for detecting
+// stack overflows
 
 //----------------------------------------------------------------------
 // Thread::Thread
@@ -57,37 +57,37 @@ Thread::Thread(char *threadName)
 
 Thread::~Thread()
 {
-    DEBUG('t', (char *)"Deleting thread \"%s\"\n", name);
-    type = INVALID_TYPE;
+  DEBUG('t', (char *)"Deleting thread \"%s\"\n", name);
+  type = INVALID_TYPE;
 
-    //CheckOverflow();
+  //CheckOverflow();
 
-    // Delete the simulator stack In case this==g_current_thread, it
-    // means we are currently deleting the last executing thread in
-    // the system at system shutdown time. It this situation, we do not
-    // free the stack since we are still using it
-    if (this !=g_current_thread)
-      DeallocBoundedArray(simulator_context.stackBottom,simulator_context.stackSize);
+  // Delete the simulator stack In case this==g_current_thread, it
+  // means we are currently deleting the last executing thread in
+  // the system at system shutdown time. It this situation, we do not
+  // free the stack since we are still using it
+  if (this !=g_current_thread)
+  DeallocBoundedArray(simulator_context.stackBottom,simulator_context.stackSize);
 
-    // NB: the thread stack itself is not freed, we do not attempt to
-    // reuse the address space dedicated to stack The corresponding
-    // physical memory will be deallocated when the process will be
-    // deleted
+  // NB: the thread stack itself is not freed, we do not attempt to
+  // reuse the address space dedicated to stack The corresponding
+  // physical memory will be deallocated when the process will be
+  // deleted
 
-    // Protect from other accesses to the process object
-    IntStatus oldLevel = g_machine-> interrupt->SetStatus(INTERRUPTS_OFF);
+  // Protect from other accesses to the process object
+  IntStatus oldLevel = g_machine-> interrupt->SetStatus(INTERRUPTS_OFF);
 
-    // Signals to the process that we terminated
-    process->numThreads--;
+  // Signals to the process that we terminated
+  process->numThreads--;
 
-    // If I'm the last thread of the process, delete it
-    if (process->numThreads==0) {
-      delete process;
-    }
+  // If I'm the last thread of the process, delete it
+  if (process->numThreads==0) {
+    delete process;
+  }
 
-    g_machine->interrupt->SetStatus(oldLevel);
+  g_machine->interrupt->SetStatus(oldLevel);
 
-    delete [] name;
+  delete [] name;
 }
 
 
@@ -99,12 +99,27 @@ Thread::~Thread()
 // \return NoError on success, an error code on error
 */
 //----------------------------------------------------------------------
-int Thread::Start(Process *owner,
-		  int32_t func, int arg)
-{
+int Thread::Start(Process *owner,int32_t func, int arg){
+
+  #ifdef ETUDIANTS_TP
+  // associate the thread to his owner
+  this->process = owner;
+
+  //allocate user's stack
+  int stack_pointer = owner->addrspace->StackAllocate();
+
+  //allocate simulator's stack
+  int8_t* array = AllocBoundedArray(SIMULATORSTACKSIZE);
+
+  return 0;
+
+  #endif
+
+  #ifndef ETUDIANTS_TP
   ASSERT(process == NULL);
   printf("**** Warning: method Thread::Start is not implemented yet\n");
   exit(-1);
+  #endif
 }
 
 //----------------------------------------------------------------------
@@ -119,23 +134,23 @@ int Thread::Start(Process *owner,
 void
 Thread::InitThreadContext(int32_t initialPCREG,int32_t initialSP, int32_t arg)
 {
-    int i;
+  int i;
 
-    for (i = 0; i < NUM_INT_REGS; i++)
-	thread_context.int_registers[i] = 0;
+  for (i = 0; i < NUM_INT_REGS; i++)
+  thread_context.int_registers[i] = 0;
 
-    // Initial program counter -- must be location of "Start"
-    thread_context.int_registers[PC_REG] = initialPCREG;
+  // Initial program counter -- must be location of "Start"
+  thread_context.int_registers[PC_REG] = initialPCREG;
 
-    // Need to also tell MIPS where next instruction is, because
-    // of branch delay possibility
-    thread_context.int_registers[NEXTPC_REG] = initialPCREG+4;
+  // Need to also tell MIPS where next instruction is, because
+  // of branch delay possibility
+  thread_context.int_registers[NEXTPC_REG] = initialPCREG+4;
 
-    // Arguments
-    thread_context.int_registers[4] = arg;
+  // Arguments
+  thread_context.int_registers[4] = arg;
 
-    // Set the stack register
-    thread_context.int_registers[STACK_REG] = initialSP;
+  // Set the stack register
+  thread_context.int_registers[STACK_REG] = initialSP;
 }
 
 //----------------------------------------------------------------------
@@ -172,117 +187,117 @@ void StartThreadExecution(void) {
 */
 void
 Thread::InitSimulatorContext(int8_t* base_stack_addr,
-			  unsigned long int stack_size)
-{
-  DEBUG('t', (char *)"Init simulator context \"%s\" with stack=%p\n",
-	name,  base_stack_addr);
+  unsigned long int stack_size)
+  {
+    DEBUG('t', (char *)"Init simulator context \"%s\" with stack=%p\n",
+    name,  base_stack_addr);
 
-  ASSERT(base_stack_addr != NULL);
+    ASSERT(base_stack_addr != NULL);
 
-  // Fill in buf with the current context
-  // and then fill busf such that StartThreadExecution
-  // will be called when a setcontext will be made on buf
-  // NB: the gcc implementation of makecontext
-  //     interprets ss_sp as the stack BASE and not stack BOTTOM
-  //     (may not be portable to other architectures/compilers)
-  ASSERT(getcontext(&(simulator_context.buf))==0);
-  simulator_context.buf.uc_stack.ss_sp = base_stack_addr;
-  simulator_context.buf.uc_stack.ss_size = stack_size;
-  simulator_context.buf.uc_stack.ss_flags = 0;
-  simulator_context.buf.uc_link = NULL;
-  makecontext(&simulator_context.buf,StartThreadExecution,0);
+    // Fill in buf with the current context
+    // and then fill busf such that StartThreadExecution
+    // will be called when a setcontext will be made on buf
+    // NB: the gcc implementation of makecontext
+    //     interprets ss_sp as the stack BASE and not stack BOTTOM
+    //     (may not be portable to other architectures/compilers)
+    ASSERT(getcontext(&(simulator_context.buf))==0);
+    simulator_context.buf.uc_stack.ss_sp = base_stack_addr;
+    simulator_context.buf.uc_stack.ss_size = stack_size;
+    simulator_context.buf.uc_stack.ss_flags = 0;
+    simulator_context.buf.uc_link = NULL;
+    makecontext(&simulator_context.buf,StartThreadExecution,0);
 
-  // Setup kernel stack parameters for low-level context switch
-  simulator_context.stackBottom = base_stack_addr;
-  simulator_context.stackSize   = stack_size;
+    // Setup kernel stack parameters for low-level context switch
+    simulator_context.stackBottom = base_stack_addr;
+    simulator_context.stackSize   = stack_size;
 
-  // Mark the bottom of the stack in order to detect stack overflows
-  UNSIGNED_LONG_AT_ADDR(simulator_context.stackBottom) = STACK_FENCEPOST;
-}
+    // Mark the bottom of the stack in order to detect stack overflows
+    UNSIGNED_LONG_AT_ADDR(simulator_context.stackBottom) = STACK_FENCEPOST;
+  }
 
-//----------------------------------------------------------------------
-// Thread::Join
-/*!
-//      Sleep the thread until another thread finishes.
-//	\param Idthread thread to wait for
-//----------------------------------------------------------------------
-*/
-void
-Thread::Join(Thread *Idthread)
-{
+  //----------------------------------------------------------------------
+  // Thread::Join
+  /*!
+  //      Sleep the thread until another thread finishes.
+  //	\param Idthread thread to wait for
+  //----------------------------------------------------------------------
+  */
+  void
+  Thread::Join(Thread *Idthread)
+  {
     while (g_alive->Search(Idthread)) Yield();
-}
+  }
 
-//----------------------------------------------------------------------
-// Thread::CheckOverflow
-/*! 	Check a thread's stack to see if it has overrun the space
-//	that has been allocated for it.  If we had a smarter compiler,
-//	we wouldn't need to worry about this, but we don't.
-//
-// 	NOTE: Nachos will not catch all stack overflow conditions.
-//	In other words, your program may still crash because of an overflow.
-//
-// 	If you get bizarre results (such as seg faults where there is no code)
-// 	then you *may* need to increase the stack size.  You can avoid stack
-// 	overflows by not putting large data structures on the stack.
-// 	Don't do this: void foo() { int bigArray[10000]; ... }
-*/
-//----------------------------------------------------------------------
+  //----------------------------------------------------------------------
+  // Thread::CheckOverflow
+  /*! 	Check a thread's stack to see if it has overrun the space
+  //	that has been allocated for it.  If we had a smarter compiler,
+  //	we wouldn't need to worry about this, but we don't.
+  //
+  // 	NOTE: Nachos will not catch all stack overflow conditions.
+  //	In other words, your program may still crash because of an overflow.
+  //
+  // 	If you get bizarre results (such as seg faults where there is no code)
+  // 	then you *may* need to increase the stack size.  You can avoid stack
+  // 	overflows by not putting large data structures on the stack.
+  // 	Don't do this: void foo() { int bigArray[10000]; ... }
+  */
+  //----------------------------------------------------------------------
 
-void
-Thread::CheckOverflow()
-{
-  ASSERT(UNSIGNED_LONG_AT_ADDR(simulator_context.stackBottom) == STACK_FENCEPOST);
-}
+  void
+  Thread::CheckOverflow()
+  {
+    ASSERT(UNSIGNED_LONG_AT_ADDR(simulator_context.stackBottom) == STACK_FENCEPOST);
+  }
 
-//----------------------------------------------------------------------
-// Thread::Finish
-/*! 	Called by static function threadStart when a thread has finished
-//      its job (see userlib/libnachos.c).
-//
-// 	NOTE: we don't immediately de-allocate the thread data structure
-//	or the execution stack, because we're still running in the thread
-//	and we're still on the stack!  Instead, we set "g_thread_to_be_destroyed",
-//	so that Scheduler::SwitchTo() will call the destructor, once we're
-//	running in the context of a different thread.
-//
-// 	NOTE: we disable interrupts, so that we don't get a time slice
-//	between setting g_thread_to_be_destroyed and going to sleep.
-*/
-//----------------------------------------------------------------------
-void
-Thread::Finish ()
-{
+  //----------------------------------------------------------------------
+  // Thread::Finish
+  /*! 	Called by static function threadStart when a thread has finished
+  //      its job (see userlib/libnachos.c).
+  //
+  // 	NOTE: we don't immediately de-allocate the thread data structure
+  //	or the execution stack, because we're still running in the thread
+  //	and we're still on the stack!  Instead, we set "g_thread_to_be_destroyed",
+  //	so that Scheduler::SwitchTo() will call the destructor, once we're
+  //	running in the context of a different thread.
+  //
+  // 	NOTE: we disable interrupts, so that we don't get a time slice
+  //	between setting g_thread_to_be_destroyed and going to sleep.
+  */
+  //----------------------------------------------------------------------
+  void
+  Thread::Finish ()
+  {
 
     DEBUG('t', (char *)"Finishing thread \"%s\"\n", GetName());
 
 
-  printf("**** Warning: method Thread::Finish is not fully implemented yet\n");
+    printf("**** Warning: method Thread::Finish is not fully implemented yet\n");
 
-  // Go to sleep
-  Sleep();  // invokes SWITCH
+    // Go to sleep
+    Sleep();  // invokes SWITCH
 
- }
+  }
 
-//----------------------------------------------------------------------
-// Thread::Yield
-/*! 	Relinquish the CPU if any other thread is ready to run.
-//	If so, put the thread on the end of the ready list, so that
-//	it will eventually be re-scheduled.
-//
-//	NOTE: returns immediately if no other thread on the ready queue.
-//	Otherwise returns when the thread eventually works its way
-//	to the front of the ready list and gets re-scheduled.
-//
-//	NOTE: we disable interrupts, so that looking at the thread
-//	on the front of the ready list, and switching to it, can be done
-//	atomically.  On return, we re-set the interrupt level to its
-//	original state, in case we are called with interrupts disabled.
-*/
-//----------------------------------------------------------------------
-void
-Thread::Yield ()
-{
+  //----------------------------------------------------------------------
+  // Thread::Yield
+  /*! 	Relinquish the CPU if any other thread is ready to run.
+  //	If so, put the thread on the end of the ready list, so that
+  //	it will eventually be re-scheduled.
+  //
+  //	NOTE: returns immediately if no other thread on the ready queue.
+  //	Otherwise returns when the thread eventually works its way
+  //	to the front of the ready list and gets re-scheduled.
+  //
+  //	NOTE: we disable interrupts, so that looking at the thread
+  //	on the front of the ready list, and switching to it, can be done
+  //	atomically.  On return, we re-set the interrupt level to its
+  //	original state, in case we are called with interrupts disabled.
+  */
+  //----------------------------------------------------------------------
+  void
+  Thread::Yield ()
+  {
     Thread *nextThread;
     IntStatus oldLevel = g_machine->interrupt->SetStatus(INTERRUPTS_OFF);
 
@@ -292,35 +307,35 @@ Thread::Yield ()
 
     nextThread = g_scheduler->FindNextToRun();
     if (nextThread != NULL) {
-	g_scheduler->ReadyToRun(this);
-	g_scheduler->SwitchTo(nextThread);
+      g_scheduler->ReadyToRun(this);
+      g_scheduler->SwitchTo(nextThread);
     }
     (void) g_machine->interrupt->SetStatus(oldLevel);
-}
+  }
 
-//----------------------------------------------------------------------
-// Thread::Sleep
-/*! 	Relinquish the CPU, because the current thread is blocked
-//	waiting on a synchronization variable (Semaphore, Lock, or Condition).
-//	Eventually, some thread will wake this thread up, and put it
-//	back on the ready queue, so that it can be re-scheduled.
-//
-//	NOTE: if there are no threads on the ready queue, that means
-//	we have no thread to run.  "Interrupt::Idle" is called
-//	to signify that we should idle the CPU until the next I/O interrupt
-//	occurs (the only thing that could cause a thread to become
-//	ready to run).
-//
-//	NOTE: we assume interrupts are already disabled, because it
-//	is called from the synchronization routines which must
-//	disable interrupts for atomicity.   We need interrupts off
-//	so that there can't be a time slice between pulling the first thread
-//	off the ready list, and switching to it.
-*/
-//----------------------------------------------------------------------
-void
-Thread::Sleep ()
-{
+  //----------------------------------------------------------------------
+  // Thread::Sleep
+  /*! 	Relinquish the CPU, because the current thread is blocked
+  //	waiting on a synchronization variable (Semaphore, Lock, or Condition).
+  //	Eventually, some thread will wake this thread up, and put it
+  //	back on the ready queue, so that it can be re-scheduled.
+  //
+  //	NOTE: if there are no threads on the ready queue, that means
+  //	we have no thread to run.  "Interrupt::Idle" is called
+  //	to signify that we should idle the CPU until the next I/O interrupt
+  //	occurs (the only thing that could cause a thread to become
+  //	ready to run).
+  //
+  //	NOTE: we assume interrupts are already disabled, because it
+  //	is called from the synchronization routines which must
+  //	disable interrupts for atomicity.   We need interrupts off
+  //	so that there can't be a time slice between pulling the first thread
+  //	off the ready list, and switching to it.
+  */
+  //----------------------------------------------------------------------
+  void
+  Thread::Sleep ()
+  {
     Thread *nextThread;
 
     ASSERT(this == g_current_thread);
@@ -336,58 +351,105 @@ Thread::Sleep ()
     // set to the thread which is put to sleep, which is weird and
     // would need to be fixed
     while ((nextThread = g_scheduler->FindNextToRun()) == NULL) {
-	DEBUG('t', (char *)"Nobody to run => idle\n");
-	g_machine->interrupt->Idle();	// no one to run, wait for an interrupt
+      DEBUG('t', (char *)"Nobody to run => idle\n");
+      g_machine->interrupt->Idle();	// no one to run, wait for an interrupt
     }
 
     // Once we have another thread to execute, perform the context switch
     g_scheduler->SwitchTo(nextThread);
-}
+  }
 
-//----------------------------------------------------------------------
-// Thread::SaveProcessorState
-/*!	Save the CPU state of a user program on a context switch
-*/
-//----------------------------------------------------------------------
-void
-Thread::SaveProcessorState()
-{
-  printf("**** Warning: method Thread::SaveProcessorState is not implemented yet\n");
-  exit(-1);
+  //----------------------------------------------------------------------
+  // Thread::SaveProcessorState
+  /*!	Save the CPU state of a user program on a context switch
+  */
+  //----------------------------------------------------------------------
+  void
+  Thread::SaveProcessorState()
+  {
+    #ifdef ETUDIANTS_TP
 
-}
+    // save float registers
+    for(int f = 0; f< NUM_FP_REGS; f++ ){
+      thread_context.float_registers[f]= g_machine->float_registers[f];
 
-//----------------------------------------------------------------------
-// Thread::RestoreProcessorState
-/*!	Restore the CPU state of a user program on a context switch.
-*/
-//----------------------------------------------------------------------
+    }
 
-void
-Thread::RestoreProcessorState()
-{
-  printf("**** Warning: method Thread::RestoreProcessorState is not implemented yet\n");
-  exit(-1);
-}
+    // save int registers
+    for(int i = 0; i< NUM_INT_REGS ; i++){
+      thread_context.int_registers[i]= g_machine->int_registers[i];
 
-//----------------------------------------------------------------------
-// Thread::SaveSimulatorState
-/*!	Save the simulator state.
-*/
-//----------------------------------------------------------------------
-void
-Thread::SaveSimulatorState()
-{
-  getcontext(&(simulator_context.buf));
-}
+      //save code condition
 
-//----------------------------------------------------------------------
-// Thread::RestoreSimulatorState
-/*!	Restore simulator state.
-*/
-//----------------------------------------------------------------------
-void
-Thread::RestoreSimulatorState()
-{
-  setcontext(&(simulator_context.buf));
-}
+      thread_context.cc = g_machine->ReadCC();
+
+    }
+    #endif
+
+    #ifndef ETUDIANTS_TP
+
+    printf("**** Warning: method Thread::SaveProcessorState is not implemented yet\n");
+    exit(-1);
+
+    #endif
+
+  }
+
+  //----------------------------------------------------------------------
+  // Thread::RestoreProcessorState
+  /*!	Restore the CPU state of a user program on a context switch.
+  */
+  //----------------------------------------------------------------------
+
+  void
+  Thread::RestoreProcessorState()
+  {
+    #ifdef ETUDIANTS_TP
+
+    for(int f =0 ; f< NUM_FP_REGS ; f++){
+
+      // restore float registers
+      g_machine->float_registers[f] = thread_context.float_registers[f];
+
+    }
+
+    // restore int registers
+    for(int i = 0; i< NUM_INT_REGS ; i++){
+
+      g_machine->int_registers[i] = thread_context.int_registers[i];
+    }
+
+    // restore cde condition
+    g_machine->WriteCC(thread_context.cc);
+
+
+    #endif
+
+
+    #ifndef ETUDIANTS_TP
+    printf("**** Warning: method Thread::RestoreProcessorState is not implemented yet\n");
+    exit(-1);
+    #endif
+  }
+
+  //----------------------------------------------------------------------
+  // Thread::SaveSimulatorState
+  /*!	Save the simulator state.
+  */
+  //----------------------------------------------------------------------
+  void
+  Thread::SaveSimulatorState()
+  {
+    getcontext(&(simulator_context.buf));
+  }
+
+  //----------------------------------------------------------------------
+  // Thread::RestoreSimulatorState
+  /*!	Restore simulator state.
+  */
+  //----------------------------------------------------------------------
+  void
+  Thread::RestoreSimulatorState()
+  {
+    setcontext(&(simulator_context.buf));
+  }
