@@ -1,4 +1,4 @@
-/*! \file synch.cc
+  /*! \file synch.cc
 //  \brief Routines for synchronizing threads.
 //
 //      Three kinds of synchronization routines are defined here:
@@ -83,17 +83,15 @@ Semaphore::P() {
   #endif
 
   #ifdef ETUDIANTS_TP
-  if (g_machine->interrupt->GetStatus() == INTERRUPTS_ON) { // ensure atomicity of checks and for Thread::Sleep
-  	g_machine->interrupt->SetStatus(INTERRUPTS_OFF);
-  }
+  IntStatus old = g_machine->interrupt->GetStatus();
+  g_machine->interrupt->SetStatus(INTERRUPTS_OFF);
+  value--;
 
-  if (value <= 0) {
+  if (value < 0) {
   	queue->Append(g_current_thread);
   	g_current_thread->Sleep();
-  } else {
-  	value--;
   }
-  g_machine->interrupt->SetStatus(INTERRUPTS_ON);
+  g_machine->interrupt->SetStatus(old);
   #endif
 }
 
@@ -109,15 +107,15 @@ void
 Semaphore::V() {
 
   #ifdef ETUDIANTS_TP
-  if (g_machine->interrupt->GetStatus() == INTERRUPTS_ON) { // ensure atomicity of checks and for Scheduler::ReadyToRun()
+  IntStatus old = g_machine->interrupt->GetStatus();
   g_machine->interrupt->SetStatus(INTERRUPTS_OFF);
-  }
 
-  value++;
-  if (!queue->IsEmpty() && value > 0) {
+
+  if (!queue->IsEmpty() && value < 0) {
     g_scheduler->ReadyToRun((Thread*)queue->Remove());
   }
-g_machine->interrupt->SetStatus(INTERRUPTS_ON);
+  value++;
+g_machine->interrupt->SetStatus(old);
 
   #endif
 	#ifndef ETUDIANTS_TP

@@ -103,13 +103,21 @@ int Thread::Start(Process *owner,int32_t func, int arg){
 
   #ifdef ETUDIANTS_TP
   // associate the thread to his owner
-  this->process = owner;
+  process = owner;
+  process->numThreads++;
 
   //allocate user's stack
-  int stack_pointer = owner->addrspace->StackAllocate();
+  stackPointer = owner->addrspace->StackAllocate();
 
   //allocate simulator's stack
-  int8_t* array = AllocBoundedArray(SIMULATORSTACKSIZE);
+  int8_t* base_stack_addr = AllocBoundedArray(SIMULATORSTACKSIZE);
+
+  // Init contexts
+  InitSimulatorContext(base_stack_addr,SIMULATORSTACKSIZE);
+  InitThreadContext(func, stackPointer,arg );
+
+  g_alive->Append(this);
+  g_scheduler->ReadyToRun(this);
 
   return 0;
 
@@ -269,6 +277,18 @@ Thread::InitSimulatorContext(int8_t* base_stack_addr,
   Thread::Finish ()
   {
 
+    #ifdef ETUDIANTS_TP
+
+    IntStatus old = g_machine->interrupt->GetStatus();
+    g_machine->interrupt->SetStatus(INTERRUPTS_OFF);
+    g_thread_to_be_destroyed = this;
+    Sleep();
+    g_machine->interrupt->SetStatus(old);
+
+    #endif
+
+    #ifndef ETUDIANTS_TP
+
     DEBUG('t', (char *)"Finishing thread \"%s\"\n", GetName());
 
 
@@ -276,6 +296,7 @@ Thread::InitSimulatorContext(int8_t* base_stack_addr,
 
     // Go to sleep
     Sleep();  // invokes SWITCH
+    #endif
 
   }
 
@@ -371,19 +392,18 @@ Thread::InitSimulatorContext(int8_t* base_stack_addr,
 
     // save float registers
     for(int f = 0; f< NUM_FP_REGS; f++ ){
-      thread_context.float_registers[f]= g_machine->float_registers[f];
+      thread_context.float_registers[f]= g_machine->ReadFPRegister(f);
 
     }
 
     // save int registers
     for(int i = 0; i< NUM_INT_REGS ; i++){
-      thread_context.int_registers[i]= g_machine->int_registers[i];
-
-      //save code condition
-
-      thread_context.cc = g_machine->ReadCC();
+      thread_context.int_registers[i]= g_machine->ReadIntRegister(i);
 
     }
+    //save code condition
+
+    thread_context.cc = g_machine->ReadCC();
     #endif
 
     #ifndef ETUDIANTS_TP
@@ -409,14 +429,14 @@ Thread::InitSimulatorContext(int8_t* base_stack_addr,
     for(int f =0 ; f< NUM_FP_REGS ; f++){
 
       // restore float registers
-      g_machine->float_registers[f] = thread_context.float_registers[f];
+      g_machine->WriteFPRegister(f, thread_context.float_registers[f]);
 
     }
 
     // restore int registers
     for(int i = 0; i< NUM_INT_REGS ; i++){
 
-      g_machine->int_registers[i] = thread_context.int_registers[i];
+      g_machine->WriteIntRegister(i,thread_context.int_registers[i]);
     }
 
     // restore cde condition
