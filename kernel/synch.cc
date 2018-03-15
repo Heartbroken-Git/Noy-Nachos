@@ -111,8 +111,9 @@ Semaphore::V() {
   g_machine->interrupt->SetStatus(INTERRUPTS_OFF);
 
 
-  if (!queue->IsEmpty() && value < 0) {
-    g_scheduler->ReadyToRun((Thread*)queue->Remove());
+  if (!queue->IsEmpty()) {
+    Thread* th = (Thread*)queue->Remove();
+    g_scheduler->ReadyToRun(th);
   }
   value++;
 g_machine->interrupt->SetStatus(old);
