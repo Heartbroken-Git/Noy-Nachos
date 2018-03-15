@@ -63,9 +63,25 @@ int DriverACIA::TtySend(char* buff)
 
 int DriverACIA::TtyReceive(char* buff,int lg)
 {
+	#ifndef ETUDIANTS_TP
    printf("**** Warning: method Tty_Receive of the ACIA driver not implemented yet\n");
   exit(-1);
   return 0;
+  #endif
+
+	#ifdef ETUDIANTS_TP
+	if (g_machine->acia->GetWorkingMode() == BUSY_WAITING) { // Check whether we are in BUSY WATING or not
+		int actualLength = 0;
+		bool reachedSlashZero = false;
+		while (actualLength < lg && !reachedSlashZero) {
+			if(g_machine->acia->GetInputStateReg() == FULL) {
+				// TODO : Put the char in the inner buffer and increase length and check if '\0'
+			}
+		}
+	} else {
+		printf("ERROR : Accessing ACIA outside of BUSY WAITING, exiting !");
+		exit(-2);
+	}
 }
 
 
