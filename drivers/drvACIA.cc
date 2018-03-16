@@ -75,13 +75,20 @@ int DriverACIA::TtyReceive(char* buff,int lg)
 		bool reachedSlashZero = false;
 		while (actualLength < lg && !reachedSlashZero) {
 			if(g_machine->acia->GetInputStateReg() == FULL) {
-				// TODO : Put the char in the inner buffer and increase length and check if '\0'
+				receive_buffer[actualLength] = g_machine->acia->GetChar();
+				if (receive_buffer[actualLength] == '\0') {
+					reachedSlashZero = true;
+				}
+				actualLength++;
 			}
 		}
+		buff = &receive_buffer[0];
+		return actualLength;
 	} else {
 		printf("ERROR : Accessing ACIA outside of BUSY WAITING, exiting !");
 		exit(-2);
 	}
+	#endif
 }
 
 
