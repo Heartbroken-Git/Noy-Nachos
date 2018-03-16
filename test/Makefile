@@ -5,7 +5,7 @@
 #
 # To add generate a new program, just update the PROGRAMS target below
 
-PROGRAMS = halt hello shell matmult sort semTest SemaphoreWait
+PROGRAMS = halt hello shell matmult sort semTest SerialTestSend SerialTestReceive
 
 all: $(PROGRAMS)
 
