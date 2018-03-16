@@ -102,12 +102,10 @@ int DriverACIA::TtySend(char* buff)
 
 int DriverACIA::TtyReceive(char* buff,int lg)
 {
-<<<<<<< HEAD
-  printf("**** Warning: method Tty_Receive of the ACIA driver not implemented yet\n");
-=======
+  
 	#ifndef ETUDIANTS_TP
    printf("**** Warning: method Tty_Receive of the ACIA driver not implemented yet\n");
->>>>>>> 7b5aa52b97a8bb27a0a44bd78ae5b598c7e3dc50
+
   exit(-1);
   return 0;
   #endif
