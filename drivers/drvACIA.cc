@@ -62,6 +62,7 @@ int DriverACIA::TtySend(char* buff)
 
 
   int mode = g_machine->acia->GetWorkingMode();
+  int nb_char_send =0;
   if(g_cfg->ACIA == ACIA_BUSY_WAITING){// BUSY WAITING MODE
 
     g_machine->acia->SetWorkingMode(BUSY_WAITING);
@@ -70,11 +71,12 @@ int DriverACIA::TtySend(char* buff)
       while(g_machine->acia->GetOutputStateReg() == FULL){}// can't send a character
       g_machine->acia->PutChar(buff[this->ind_send]); // send one character
       this->ind_send++;
+      nb_char_send++;
 
-    }while(buff[this->ind_send] != '\0');
+    }while(buff[this->ind_send] != 0);
 
     g_machine->acia->SetWorkingMode(mode);
-    return ind_send;
+    return nb_char_send;
 
 
   }else if (g_cfg->ACIA == ACIA_INTERRUPT){// INTERRUPTION MODE
@@ -102,7 +104,7 @@ int DriverACIA::TtySend(char* buff)
 
 int DriverACIA::TtyReceive(char* buff,int lg)
 {
-  
+
 	#ifndef ETUDIANTS_TP
    printf("**** Warning: method Tty_Receive of the ACIA driver not implemented yet\n");
 
