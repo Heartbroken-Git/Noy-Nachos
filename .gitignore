@@ -1,6 +1,7 @@
 # Fichiers intermédiaires de compilation
 *.a
 *.o
+*.d
 
 # Fichiers de configuration
 Makefile.config

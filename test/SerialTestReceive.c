@@ -9,7 +9,7 @@
 
 int main() {
 
-	char * receivedMessage = "";
+	char receivedMessage[99];
 
 	n_printf("Awaiting message transmission\n");
 	int retValue = TtyReceive(receivedMessage,99);
