@@ -1,0 +1,10 @@
+# Fichiers intermédiaires de compilation
+*.a
+*.o
+
+# Fichiers de configuration
+Makefile.config
+
+# Fichiers binaires
+nachos
+

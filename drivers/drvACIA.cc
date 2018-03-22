@@ -113,20 +113,24 @@ int DriverACIA::TtyReceive(char* buff,int lg)
   #endif
 
 	#ifdef ETUDIANTS_TP
+	DEBUG('d', (char *) "Initiating reception subroutine, checking ACIA mode\n");
 	if (g_machine->acia->GetWorkingMode() == BUSY_WAITING) { // Check whether we are in BUSY WATING or not
-		int actualLength = 0;
+		DEBUG('d', (char *) "ACIA mode found as BUSY_WAITING\n");
+		ind_rec = 0;
 		bool reachedSlashZero = false;
-		while (actualLength < lg && !reachedSlashZero) {
+		while (ind_rec < lg && !reachedSlashZero) {
+			DEBUG('d', (char *) "Checking whether InputStateReg ready or not\n");
 			if(g_machine->acia->GetInputStateReg() == FULL) {
-				receive_buffer[actualLength] = g_machine->acia->GetChar();
-				if (receive_buffer[actualLength] == '\0') {
+				receive_buffer[ind_rec] = g_machine->acia->GetChar();
+				DEBUG('d', (char *) "Registry ready and char copied : %c", receive_buffer[ind_rec]);
+				if (receive_buffer[ind_rec] == '\0') {
 					reachedSlashZero = true;
 				}
-				actualLength++;
+				ind_rec++;
 			}
 		}
 		buff = &receive_buffer[0];
-		return actualLength;
+		return ind_rec;
 	} else {
 		printf("ERROR : Accessing ACIA outside of BUSY WAITING, exiting !");
 		exit(-2);
