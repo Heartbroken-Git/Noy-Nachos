@@ -71,9 +71,9 @@ int DriverACIA::TtySend(char* buff)
       while(g_machine->acia->GetOutputStateReg() == FULL){}// can't send a character
       g_machine->acia->PutChar(buff[ind_send]); // send one character
       ind_send++;
-      DEBUG('d', (char *)"buffer[%d] = %c [%d]\n",ind_send, buff[ind_send], buff[ind_send]);
+      DEBUG('d', (char *)"buffer[%d] = %c\n",ind_send, buff[ind_send]);
 
-    }while(buff[this->ind_send] != 0);
+    }while(buff[ind_send] != 0);
 
     g_machine->acia->SetWorkingMode(mode);
     DEBUG('d', (char *)"TtySend exit\n");
@@ -82,16 +82,6 @@ int DriverACIA::TtySend(char* buff)
 
 
   }else if (g_cfg->ACIA == ACIA_INTERRUPT){// INTERRUPTION MODE
-    DEBUG('d', (char *)"TtyReceive : ACIA_INTERRUPT\n");
-    this -> receive_sema -> P();
-    lg = this -> ind_send;
-    for (int i = 0; i < strlen(this -> send_buffer); i++) {
-      buff[i] = this -> send_buffer[i];
-    }
-    this -> ind_send = 0;
-    g_machine -> acia -> SetWorkingMode(REC_INTERRUPT);
-    DEBUG('d', (char *)"TtyReceive exit\n");
-    return this -> ind_rec;
 
   }else{
 
@@ -124,48 +114,48 @@ int DriverACIA::TtyReceive(char* buff,int lg)
   return 0;
   #endif
 
-	#ifdef ETUDIANTS_TP
-	DEBUG('d', (char *) "Initiating reception subroutine, checking ACIA mode\n");
-	switch (g_cfg->ACIA) {
+  #ifdef ETUDIANTS_TP
+  DEBUG('d', (char *) "Initiating reception subroutine, checking ACIA mode\n");
+  switch (g_cfg->ACIA) {
 
-		case ACIA_BUSY_WAITING: {
-			DEBUG('d', (char *) "ACIA mode found as BUSY_WAITING\n");
-			ind_rec = 0;
-			bool reachedSlashZero = false;
-			while (ind_rec < lg && !reachedSlashZero) {
-				DEBUG('d', (char *) "Checking whether InputStateReg ready or not\n");
-				while (g_machine->acia->GetInputStateReg() != FULL) {}
-				receive_buffer[ind_rec] = g_machine->acia->GetChar();
-				DEBUG('d', (char *) "Registry ready and char copied : %c \n", receive_buffer[ind_rec]);
-				if (receive_buffer[ind_rec] == '\0') {
-					reachedSlashZero = true;
-				}
-				ind_rec++;
-			}
+    case ACIA_BUSY_WAITING: {
+      DEBUG('d', (char *) "ACIA mode found as BUSY_WAITING\n");
+      ind_rec = 0;
+      bool reachedSlashZero = false;
+      while (ind_rec < lg && !reachedSlashZero) {
+        DEBUG('d', (char *) "Checking whether InputStateReg ready or not\n");
+        while (g_machine->acia->GetInputStateReg() != FULL) {}
+        receive_buffer[ind_rec] = g_machine->acia->GetChar();
+        DEBUG('d', (char *) "Registry ready and char copied : %c \n", receive_buffer[ind_rec]);
+        if (receive_buffer[ind_rec] == '\0') {
+          reachedSlashZero = true;
+        }
+        ind_rec++;
+      }
 
-			buff = &receive_buffer[0];
-			return ind_rec;
-			// break;
-		}
+      buff = &receive_buffer[0];
+      return ind_rec;
+      // break;
+    }
 
-		case ACIA_INTERRUPT: {
-			DEBUG('d', (char *) "ACIA mode found as either INTERRUPT\n");
-			ind_rec = 0;
-			DEBUG('d', (char *) "Giving way to other threads while waiting for buffer\n");
-			receive_sema->P();
-			// wait for buffer to get filled in
+    case ACIA_INTERRUPT: {
+      DEBUG('d', (char *) "ACIA mode found as either INTERRUPT\n");
+      ind_rec = 0;
+      DEBUG('d', (char *) "Giving way to other threads while waiting for buffer\n");
+      receive_sema->P();
+      // wait for buffer to get filled in
 
-			buff = &receive_buffer[0];
-			return ind_rec;
-			//break;
-		}
+      buff = &receive_buffer[0];
+      return ind_rec;
+      //break;
+    }
 
-		default: {
-			printf("ERROR : Unexpected ACIA mode, exiting !");
-			exit(-2);
-		}
-	}
-	#endif
+    default: {
+      printf("ERROR : Unexpected ACIA mode, exiting !");
+      exit(-2);
+    }
+  }
+  #endif
 }
 
 
@@ -180,10 +170,10 @@ Detects when it's the end of the message (if so, releases the send_sema semaphor
 void DriverACIA::InterruptSend()
 {
   #ifdef ETUDIANTS_TP
-  if (send_buffer[ind_send - 1] != 0) {
+  if (send_buffer[ind_send] != 0) {
     g_machine -> acia -> PutChar(send_buffer[ind_send]);
     ind_send++;
-  } else {
+  }else{
     g_machine->acia->SetWorkingMode(REC_INTERRUPT);
     send_sema->V();
   }
@@ -206,18 +196,21 @@ interrupts when the last character of the message is received
 
 void DriverACIA::InterruptReceive()
 {
-	#ifndef ETUDIANTS_TP
+  #ifndef ETUDIANTS_TP
   printf("**** Warning: receive interrupt handler not implemented yet\n");
   exit(-1);
-	#endif
+  #endif
 
-	#ifdef ETUDIANTS_TP
-	receive_buffer[ind_rec] = g_machine->acia->GetChar();
-	DEBUG('d', (char *) "Registry ready and char copied : %c \n", receive_buffer[ind_rec]);
-	if ((receive_buffer[ind_rec] == '\0') || (ind_rec+1 == BUFFER_SIZE)) {
-		ind_rec++;
-		receive_sema->V();
-	}
-	#endif
+  #ifdef ETUDIANTS_TP
+  receive_buffer[ind_rec] = g_machine->acia->GetChar();
+  DEBUG('d', (char *) "Registry ready and char copied : %c \n", receive_buffer[ind_rec]);
+  if ((receive_buffer[ind_rec] == '\0') || (ind_rec+1 == BUFFER_SIZE)) {
+    g_machine -> acia -> SetWorkingMode(SEND_INTERRUPT);
+
+    receive_sema->V();
+  }else{
+    ind_rec++;
+  }
+  #endif
 
 }
