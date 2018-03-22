@@ -82,6 +82,16 @@ int DriverACIA::TtySend(char* buff)
 
 
   }else if (g_cfg->ACIA == ACIA_INTERRUPT){// INTERRUPTION MODE
+    DEBUG('d', (char *)"TtyReceive : ACIA_INTERRUPT\n");
+    this -> receive_sema -> P();
+    lg = this -> ind_send;
+    for (int i = 0; i < strlen(this -> send_buffer); i++) {
+      buff[i] = this -> send_buffer[i];
+    }
+    this -> ind_send = 0;
+    g_machine -> acia -> SetWorkingMode(REC_INTERRUPT);
+    DEBUG('d', (char *)"TtyReceive exit\n");
+    return this -> ind_rec;
 
   }else{
 
@@ -117,7 +127,7 @@ int DriverACIA::TtyReceive(char* buff,int lg)
 	#ifdef ETUDIANTS_TP
 	DEBUG('d', (char *) "Initiating reception subroutine, checking ACIA mode\n");
 	switch (g_cfg->ACIA) {
-		
+
 		case ACIA_BUSY_WAITING: {
 			DEBUG('d', (char *) "ACIA mode found as BUSY_WAITING\n");
 			ind_rec = 0;
@@ -137,19 +147,19 @@ int DriverACIA::TtyReceive(char* buff,int lg)
 			return ind_rec;
 			// break;
 		}
-		
+
 		case ACIA_INTERRUPT: {
 			DEBUG('d', (char *) "ACIA mode found as either INTERRUPT\n");
 			ind_rec = 0;
 			DEBUG('d', (char *) "Giving way to other threads while waiting for buffer\n");
 			receive_sema->P();
 			// wait for buffer to get filled in
-			
+
 			buff = &receive_buffer[0];
 			return ind_rec;
 			//break;
 		}
-			
+
 		default: {
 			printf("ERROR : Unexpected ACIA mode, exiting !");
 			exit(-2);
@@ -200,7 +210,7 @@ void DriverACIA::InterruptReceive()
   printf("**** Warning: receive interrupt handler not implemented yet\n");
   exit(-1);
 	#endif
-	
+
 	#ifdef ETUDIANTS_TP
 	receive_buffer[ind_rec] = g_machine->acia->GetChar();
 	DEBUG('d', (char *) "Registry ready and char copied : %c \n", receive_buffer[ind_rec]);
@@ -209,5 +219,5 @@ void DriverACIA::InterruptReceive()
 		receive_sema->V();
 	}
 	#endif
-	
+
 }
