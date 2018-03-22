@@ -38,8 +38,8 @@ working mode and create the semaphore.
 DriverACIA::DriverACIA()
 {
   #ifdef ETUDIANTS_TP
-  send_sema = new Semaphore((char *)"send_sema",1);
-  receive_sema = new Semaphore((char * )"receive_sema",1);
+  send_sema = new Semaphore((char *)"send_sema",0);
+  receive_sema = new Semaphore((char * )"receive_sema",0);
   ind_send = 0;
   ind_rec = 0;
   #endif
@@ -82,6 +82,25 @@ int DriverACIA::TtySend(char* buff)
 
 
   }else if (g_cfg->ACIA == ACIA_INTERRUPT){// INTERRUPTION MODE
+	
+	DEBUG('d', (char *) "ACIA mode found as either INTERRUPT\n");
+	DEBUG('d', (char *) "Filling emission buffer\n");
+	ind_send = 0;
+	
+	while (buff[ind_send] != '\0' && ind_send < BUFFER_SIZE) {
+		send_buffer[ind_send] = buff[ind_send];
+		ind_send++;
+	}
+	DEBUG('d', (char *) "Buffer filled with %i characters\n", ind_send);
+	ind_send = 0;
+	
+	DEBUG('d', (char *) "Giving way to other threads while buffer emptying\n");
+	g_machine -> acia -> SetWorkingMode(SEND_INTERRUPT);
+	send_sema->P();
+	// Sending stuff
+	
+	g_machine -> acia -> SetWorkingMode(BUSY_WAITING);
+	return ind_send;	
 
   }else{
 
@@ -143,9 +162,11 @@ int DriverACIA::TtyReceive(char* buff,int lg)
       ind_rec = 0;
       DEBUG('d', (char *) "Giving way to other threads while waiting for buffer\n");
       receive_sema->P();
+      g_machine -> acia -> SetWorkingMode(REC_INTERRUPT);
       // wait for buffer to get filled in
 
       buff = &receive_buffer[0];
+      g_machine -> acia -> SetWorkingMode(BUSY_WAITING);
       return ind_rec;
       //break;
     }
@@ -171,6 +192,7 @@ void DriverACIA::InterruptSend()
 {
   #ifdef ETUDIANTS_TP
   if (send_buffer[ind_send] != 0) {
+  	DEBUG('d', (char *) "Registry ready and char copied : %c \n", send_buffer[ind_send]);
     g_machine -> acia -> PutChar(send_buffer[ind_send]);
     ind_send++;
   }else{
