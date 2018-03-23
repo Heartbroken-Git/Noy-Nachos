@@ -442,6 +442,8 @@ Thread::InitSimulatorContext(int8_t* base_stack_addr,
     // restore cde condition
     g_machine->WriteCC(thread_context.cc);
 
+	// restore address space
+	g_machine->mmu->translationTable = GetProcessOwner()->addrspace->translationTable;
 
     #endif
 
