@@ -165,6 +165,7 @@ AddrSpace::AddrSpace(OpenFile * exec_file, Process *p, int *err)
 	   pgdisk++, virt_page ++)
 	{
 
+	
 	  /* Without demand paging */
 	  
 	  // Set up default values for the page table entry
@@ -174,6 +175,8 @@ AddrSpace::AddrSpace(OpenFile * exec_file, Process *p, int *err)
 	    translationTable->setBitWriteAllowed(virt_page);
 	  else translationTable->clearBitWriteAllowed(virt_page);
 	  translationTable->clearBitIo(virt_page);
+	  
+	  #ifndef ETUDIANTS_TP
 
 	  // Get a page in physical memory, halt of there is not sufficient space
 	  int pp = g_physical_mem_manager->FindFreePage();
@@ -213,6 +216,11 @@ AddrSpace::AddrSpace(OpenFile * exec_file, Process *p, int *err)
 	  translationTable->setBitValid(virt_page);
 	  
 	  /* End of code without demand paging */
+	  #endif
+	  
+	  #ifdef ETUDIANTS_TP
+	  translationTable->clearBitValid(virt_page);
+	  #endif
 	}
     }
   delete [] shnames;
