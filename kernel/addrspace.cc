@@ -322,6 +322,9 @@ int AddrSpace::StackAllocate(void)
     
     #ifdef ETUDIANTS_TP
     translationTable->clearBitValid(i);
+    translationTable->setBitReadAllowed(i);
+    translationTable->setBitWriteAllowed(i);
+    translationTable->clearBitIo(i);
     #endif
     }
 
