@@ -282,12 +282,14 @@ Thread::InitSimulatorContext(int8_t* base_stack_addr,
     IntStatus old = g_machine->interrupt->GetStatus();
     g_machine->interrupt->SetStatus(INTERRUPTS_OFF);
     g_thread_to_be_destroyed = this;
+    g_alive->RemoveItem(this);
     Sleep();
     g_machine->interrupt->SetStatus(old);
 
     #endif
 
     #ifndef ETUDIANTS_TP
+
 
     DEBUG('t', (char *)"Finishing thread \"%s\"\n", GetName());
 
