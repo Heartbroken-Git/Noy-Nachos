@@ -293,6 +293,8 @@ int AddrSpace::StackAllocate(void)
 	(stackBasePage+numPages)*g_cfg->PageSize);
 
   for (int i = stackBasePage ; i < (stackBasePage + numPages) ; i++) {
+  
+  	#ifndef ETUDIANTS_TP
     /* Without demand paging */
 
     // Allocate a new physical page for the stack, halt if not page availabke
@@ -316,6 +318,11 @@ int AddrSpace::StackAllocate(void)
     translationTable->setBitWriteAllowed(i);
     translationTable->clearBitIo(i);
     /* End of code without demand paging */
+    #endif
+    
+    #ifdef ETUDIANTS_TP
+    translationTable->clearBitValid(i);
+    #endif
     }
 
   int stackpointer = (stackBasePage+numPages)*g_cfg->PageSize - 4*sizeof(int);
