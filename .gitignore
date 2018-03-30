@@ -9,3 +9,6 @@ Makefile.config
 # Fichiers binaires
 nachos
 
+# Images Disque
+DISK
+SWAPDISK
