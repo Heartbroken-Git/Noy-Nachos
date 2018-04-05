@@ -127,9 +127,11 @@ int PhysicalMemManager::AddPhysicalToVirtualMapping(AddrSpace* owner,int virtual
   #endif
 
   #ifdef ETUDIANTS_TP
+  DEBUG('v', (char *)"Trying to find free page\n");
   int pageNumber = FindFreePage();
 
   if (pageNumber == -1) {
+    DEBUG('v', (char *)"No free pages => page eviction started\n");
     pageNumber = EvictPage();
   }
 
@@ -137,6 +139,9 @@ int PhysicalMemManager::AddPhysicalToVirtualMapping(AddrSpace* owner,int virtual
   tpr[pageNumber].virtualPage = virtualPage;
   tpr[pageNumber].free = false;
   tpr[pageNumber].owner = owner;
+
+  UnlockPage(pageNumber);
+  return pageNumber;
   #endif
 }
 
@@ -181,9 +186,16 @@ int PhysicalMemManager::FindFreePage() {
 */
 //-----------------------------------------------------------------
 int PhysicalMemManager::EvictPage() {
+
+  #ifndef ETUDIANTS_TP
   printf("**** Warning: page replacement algorithm is not implemented yet\n");
     exit(-1);
     return (0);
+  #endif
+
+  #ifdef ETUDIANTS_TP
+  // TODO
+  #endif
 }
 
 //-----------------------------------------------------------------
