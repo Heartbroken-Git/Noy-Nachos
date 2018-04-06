@@ -194,7 +194,37 @@ int PhysicalMemManager::EvictPage() {
   #endif
 
   #ifdef ETUDIANTS_TP
-  // TODO
+    i_clock = 0;
+    bool foundPage = false;
+    while (!foundPage) {
+        if (tpr[i_clock].locked == false) {
+            DEBUG('v', (char *)"Unlocked page found\n");
+            if (g_machine->mmu->translationTable->getBitU(tpr[i_clock].virtualPage) == 0) {
+                DEBUG('v', (char *)"Page's U bit not set, taking\n");
+                foundPage = true;
+            } else {
+                DEBUG('v', (char*)"Page's U bit set, don't take but set it\n");
+                g_machine->mmu->translationTable->clearBitU(tpr[i_clock].virtualPage);
+            }
+        }
+        if (!foundPage) {
+            i_clock = (i_clock + 1) % g_cfg->NumPhysPages;
+        }
+    }
+
+    int addrVirt = tpr[i_clock].virtualPage;
+    if (g_machine->mmu->translationTable->getBitM(addrVirt) == 1) {
+        DEBUG('v', (char*) "Requested page has been modified, saving to swap");
+        int newAddr = g_swap_manager->PutPageSwap(g_machine->mmu->translationTable->getAddrDisk(addrVirt),(char*)g_machine->mmu->translationTable->getPhysicalPage(addrVirt));
+        if (g_machine->mmu->translationTable->getAddrDisk(addrVirt) == -1) {
+            g_machine->mmu->translationTable->setAddrDisk(addrVirt, newAddr);
+        }
+        g_machine->mmu->translationTable->setBitSwap(addrVirt);
+        g_machine->mmu->translationTable->clearBitValid(addrVirt);
+    }
+
+    return i_clock;
+
   #endif
 }
 
