@@ -1,0 +1,353 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6"/>
+	<Project>
+		<Option title="Noy_Nachos"/>
+		<Option makefile_is_custom="1"/>
+		<Option compiler="gcc"/>
+		<Option virtualFolders="CMake Files\;"/>
+		<Build>
+			<Target title="all">
+				<Option working_dir="/home/boby/Documents/M1/NOY-Bi/Noy-Nachos/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j4 -f &quot;/home/boby/Documents/M1/NOY-Bi/Noy-Nachos/cmake-build-debug/Makefile&quot;  VERBOSE=1 all"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/home/boby/Documents/M1/NOY-Bi/Noy-Nachos/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/home/boby/Documents/M1/NOY-Bi/Noy-Nachos/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/home/boby/Documents/M1/NOY-Bi/Noy-Nachos/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="rebuild_cache">
+				<Option working_dir="/home/boby/Documents/M1/NOY-Bi/Noy-Nachos/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j4 -f &quot;/home/boby/Documents/M1/NOY-Bi/Noy-Nachos/cmake-build-debug/Makefile&quot;  VERBOSE=1 rebuild_cache"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/home/boby/Documents/M1/NOY-Bi/Noy-Nachos/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/home/boby/Documents/M1/NOY-Bi/Noy-Nachos/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/home/boby/Documents/M1/NOY-Bi/Noy-Nachos/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="edit_cache">
+				<Option working_dir="/home/boby/Documents/M1/NOY-Bi/Noy-Nachos/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j4 -f &quot;/home/boby/Documents/M1/NOY-Bi/Noy-Nachos/cmake-build-debug/Makefile&quot;  VERBOSE=1 edit_cache"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/home/boby/Documents/M1/NOY-Bi/Noy-Nachos/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/home/boby/Documents/M1/NOY-Bi/Noy-Nachos/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/home/boby/Documents/M1/NOY-Bi/Noy-Nachos/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="Noy_Nachos">
+				<Option output="/home/boby/Documents/M1/NOY-Bi/Noy-Nachos/cmake-build-debug/Noy_Nachos" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/boby/Documents/M1/NOY-Bi/Noy-Nachos/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add option="-DETUDIANTS_TP"/>
+					<Add directory="/home/boby/Documents/M1/NOY-Bi/Noy-Nachos/../Noy-Nachos"/>
+					<Add directory="/usr/include/c++/5"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/5"/>
+					<Add directory="/usr/include/c++/5/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/5/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j4 -f &quot;/home/boby/Documents/M1/NOY-Bi/Noy-Nachos/cmake-build-debug/Makefile&quot;  VERBOSE=1 Noy_Nachos"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/home/boby/Documents/M1/NOY-Bi/Noy-Nachos/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/home/boby/Documents/M1/NOY-Bi/Noy-Nachos/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/home/boby/Documents/M1/NOY-Bi/Noy-Nachos/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="Noy_Nachos/fast">
+				<Option output="/home/boby/Documents/M1/NOY-Bi/Noy-Nachos/cmake-build-debug/Noy_Nachos" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/boby/Documents/M1/NOY-Bi/Noy-Nachos/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add option="-DETUDIANTS_TP"/>
+					<Add directory="/home/boby/Documents/M1/NOY-Bi/Noy-Nachos/../Noy-Nachos"/>
+					<Add directory="/usr/include/c++/5"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/5"/>
+					<Add directory="/usr/include/c++/5/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/5/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j4 -f &quot;/home/boby/Documents/M1/NOY-Bi/Noy-Nachos/cmake-build-debug/Makefile&quot;  VERBOSE=1 Noy_Nachos/fast"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/home/boby/Documents/M1/NOY-Bi/Noy-Nachos/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/home/boby/Documents/M1/NOY-Bi/Noy-Nachos/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/home/boby/Documents/M1/NOY-Bi/Noy-Nachos/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+		</Build>
+		<Unit filename="/home/boby/Documents/M1/NOY-Bi/Noy-Nachos/drivers/drvACIA.cc">
+			<Option target="Noy_Nachos"/>
+		</Unit>
+		<Unit filename="/home/boby/Documents/M1/NOY-Bi/Noy-Nachos/drivers/drvACIA.h">
+			<Option target="Noy_Nachos"/>
+		</Unit>
+		<Unit filename="/home/boby/Documents/M1/NOY-Bi/Noy-Nachos/drivers/drvConsole.cc">
+			<Option target="Noy_Nachos"/>
+		</Unit>
+		<Unit filename="/home/boby/Documents/M1/NOY-Bi/Noy-Nachos/drivers/drvConsole.h">
+			<Option target="Noy_Nachos"/>
+		</Unit>
+		<Unit filename="/home/boby/Documents/M1/NOY-Bi/Noy-Nachos/drivers/drvDisk.cc">
+			<Option target="Noy_Nachos"/>
+		</Unit>
+		<Unit filename="/home/boby/Documents/M1/NOY-Bi/Noy-Nachos/drivers/drvDisk.h">
+			<Option target="Noy_Nachos"/>
+		</Unit>
+		<Unit filename="/home/boby/Documents/M1/NOY-Bi/Noy-Nachos/filesys/directory.cc">
+			<Option target="Noy_Nachos"/>
+		</Unit>
+		<Unit filename="/home/boby/Documents/M1/NOY-Bi/Noy-Nachos/filesys/directory.h">
+			<Option target="Noy_Nachos"/>
+		</Unit>
+		<Unit filename="/home/boby/Documents/M1/NOY-Bi/Noy-Nachos/filesys/filehdr.cc">
+			<Option target="Noy_Nachos"/>
+		</Unit>
+		<Unit filename="/home/boby/Documents/M1/NOY-Bi/Noy-Nachos/filesys/filehdr.h">
+			<Option target="Noy_Nachos"/>
+		</Unit>
+		<Unit filename="/home/boby/Documents/M1/NOY-Bi/Noy-Nachos/filesys/filesys.cc">
+			<Option target="Noy_Nachos"/>
+		</Unit>
+		<Unit filename="/home/boby/Documents/M1/NOY-Bi/Noy-Nachos/filesys/filesys.h">
+			<Option target="Noy_Nachos"/>
+		</Unit>
+		<Unit filename="/home/boby/Documents/M1/NOY-Bi/Noy-Nachos/filesys/fsmisc.cc">
+			<Option target="Noy_Nachos"/>
+		</Unit>
+		<Unit filename="/home/boby/Documents/M1/NOY-Bi/Noy-Nachos/filesys/oftable.cc">
+			<Option target="Noy_Nachos"/>
+		</Unit>
+		<Unit filename="/home/boby/Documents/M1/NOY-Bi/Noy-Nachos/filesys/oftable.h">
+			<Option target="Noy_Nachos"/>
+		</Unit>
+		<Unit filename="/home/boby/Documents/M1/NOY-Bi/Noy-Nachos/filesys/openfile.cc">
+			<Option target="Noy_Nachos"/>
+		</Unit>
+		<Unit filename="/home/boby/Documents/M1/NOY-Bi/Noy-Nachos/filesys/openfile.h">
+			<Option target="Noy_Nachos"/>
+		</Unit>
+		<Unit filename="/home/boby/Documents/M1/NOY-Bi/Noy-Nachos/kernel/addrspace.cc">
+			<Option target="Noy_Nachos"/>
+		</Unit>
+		<Unit filename="/home/boby/Documents/M1/NOY-Bi/Noy-Nachos/kernel/addrspace.h">
+			<Option target="Noy_Nachos"/>
+		</Unit>
+		<Unit filename="/home/boby/Documents/M1/NOY-Bi/Noy-Nachos/kernel/copyright.h">
+			<Option target="Noy_Nachos"/>
+		</Unit>
+		<Unit filename="/home/boby/Documents/M1/NOY-Bi/Noy-Nachos/kernel/elf32.h">
+			<Option target="Noy_Nachos"/>
+		</Unit>
+		<Unit filename="/home/boby/Documents/M1/NOY-Bi/Noy-Nachos/kernel/exception.cc">
+			<Option target="Noy_Nachos"/>
+		</Unit>
+		<Unit filename="/home/boby/Documents/M1/NOY-Bi/Noy-Nachos/kernel/main.cc">
+			<Option target="Noy_Nachos"/>
+		</Unit>
+		<Unit filename="/home/boby/Documents/M1/NOY-Bi/Noy-Nachos/kernel/msgerror.cc">
+			<Option target="Noy_Nachos"/>
+		</Unit>
+		<Unit filename="/home/boby/Documents/M1/NOY-Bi/Noy-Nachos/kernel/msgerror.h">
+			<Option target="Noy_Nachos"/>
+		</Unit>
+		<Unit filename="/home/boby/Documents/M1/NOY-Bi/Noy-Nachos/kernel/process.cc">
+			<Option target="Noy_Nachos"/>
+		</Unit>
+		<Unit filename="/home/boby/Documents/M1/NOY-Bi/Noy-Nachos/kernel/process.h">
+			<Option target="Noy_Nachos"/>
+		</Unit>
+		<Unit filename="/home/boby/Documents/M1/NOY-Bi/Noy-Nachos/kernel/scheduler.cc">
+			<Option target="Noy_Nachos"/>
+		</Unit>
+		<Unit filename="/home/boby/Documents/M1/NOY-Bi/Noy-Nachos/kernel/scheduler.h">
+			<Option target="Noy_Nachos"/>
+		</Unit>
+		<Unit filename="/home/boby/Documents/M1/NOY-Bi/Noy-Nachos/kernel/synch.cc">
+			<Option target="Noy_Nachos"/>
+		</Unit>
+		<Unit filename="/home/boby/Documents/M1/NOY-Bi/Noy-Nachos/kernel/synch.h">
+			<Option target="Noy_Nachos"/>
+		</Unit>
+		<Unit filename="/home/boby/Documents/M1/NOY-Bi/Noy-Nachos/kernel/system.cc">
+			<Option target="Noy_Nachos"/>
+		</Unit>
+		<Unit filename="/home/boby/Documents/M1/NOY-Bi/Noy-Nachos/kernel/system.h">
+			<Option target="Noy_Nachos"/>
+		</Unit>
+		<Unit filename="/home/boby/Documents/M1/NOY-Bi/Noy-Nachos/kernel/thread.cc">
+			<Option target="Noy_Nachos"/>
+		</Unit>
+		<Unit filename="/home/boby/Documents/M1/NOY-Bi/Noy-Nachos/kernel/thread.h">
+			<Option target="Noy_Nachos"/>
+		</Unit>
+		<Unit filename="/home/boby/Documents/M1/NOY-Bi/Noy-Nachos/machine/ACIA.cc">
+			<Option target="Noy_Nachos"/>
+		</Unit>
+		<Unit filename="/home/boby/Documents/M1/NOY-Bi/Noy-Nachos/machine/ACIA.h">
+			<Option target="Noy_Nachos"/>
+		</Unit>
+		<Unit filename="/home/boby/Documents/M1/NOY-Bi/Noy-Nachos/machine/ACIA_sysdep.cc">
+			<Option target="Noy_Nachos"/>
+		</Unit>
+		<Unit filename="/home/boby/Documents/M1/NOY-Bi/Noy-Nachos/machine/ACIA_sysdep.h">
+			<Option target="Noy_Nachos"/>
+		</Unit>
+		<Unit filename="/home/boby/Documents/M1/NOY-Bi/Noy-Nachos/machine/console.cc">
+			<Option target="Noy_Nachos"/>
+		</Unit>
+		<Unit filename="/home/boby/Documents/M1/NOY-Bi/Noy-Nachos/machine/console.h">
+			<Option target="Noy_Nachos"/>
+		</Unit>
+		<Unit filename="/home/boby/Documents/M1/NOY-Bi/Noy-Nachos/machine/disk.cc">
+			<Option target="Noy_Nachos"/>
+		</Unit>
+		<Unit filename="/home/boby/Documents/M1/NOY-Bi/Noy-Nachos/machine/disk.h">
+			<Option target="Noy_Nachos"/>
+		</Unit>
+		<Unit filename="/home/boby/Documents/M1/NOY-Bi/Noy-Nachos/machine/interrupt.cc">
+			<Option target="Noy_Nachos"/>
+		</Unit>
+		<Unit filename="/home/boby/Documents/M1/NOY-Bi/Noy-Nachos/machine/interrupt.h">
+			<Option target="Noy_Nachos"/>
+		</Unit>
+		<Unit filename="/home/boby/Documents/M1/NOY-Bi/Noy-Nachos/machine/machine.cc">
+			<Option target="Noy_Nachos"/>
+		</Unit>
+		<Unit filename="/home/boby/Documents/M1/NOY-Bi/Noy-Nachos/machine/machine.h">
+			<Option target="Noy_Nachos"/>
+		</Unit>
+		<Unit filename="/home/boby/Documents/M1/NOY-Bi/Noy-Nachos/machine/mipssim.cc">
+			<Option target="Noy_Nachos"/>
+		</Unit>
+		<Unit filename="/home/boby/Documents/M1/NOY-Bi/Noy-Nachos/machine/mipssim.h">
+			<Option target="Noy_Nachos"/>
+		</Unit>
+		<Unit filename="/home/boby/Documents/M1/NOY-Bi/Noy-Nachos/machine/mmu.cc">
+			<Option target="Noy_Nachos"/>
+		</Unit>
+		<Unit filename="/home/boby/Documents/M1/NOY-Bi/Noy-Nachos/machine/mmu.h">
+			<Option target="Noy_Nachos"/>
+		</Unit>
+		<Unit filename="/home/boby/Documents/M1/NOY-Bi/Noy-Nachos/machine/sysdep.cc">
+			<Option target="Noy_Nachos"/>
+		</Unit>
+		<Unit filename="/home/boby/Documents/M1/NOY-Bi/Noy-Nachos/machine/sysdep.h">
+			<Option target="Noy_Nachos"/>
+		</Unit>
+		<Unit filename="/home/boby/Documents/M1/NOY-Bi/Noy-Nachos/machine/timer.cc">
+			<Option target="Noy_Nachos"/>
+		</Unit>
+		<Unit filename="/home/boby/Documents/M1/NOY-Bi/Noy-Nachos/machine/timer.h">
+			<Option target="Noy_Nachos"/>
+		</Unit>
+		<Unit filename="/home/boby/Documents/M1/NOY-Bi/Noy-Nachos/machine/translationtable.cc">
+			<Option target="Noy_Nachos"/>
+		</Unit>
+		<Unit filename="/home/boby/Documents/M1/NOY-Bi/Noy-Nachos/machine/translationtable.h">
+			<Option target="Noy_Nachos"/>
+		</Unit>
+		<Unit filename="/home/boby/Documents/M1/NOY-Bi/Noy-Nachos/test/SemaphoreWait.c">
+			<Option target="Noy_Nachos"/>
+		</Unit>
+		<Unit filename="/home/boby/Documents/M1/NOY-Bi/Noy-Nachos/test/SerialTestReceive.c">
+			<Option target="Noy_Nachos"/>
+		</Unit>
+		<Unit filename="/home/boby/Documents/M1/NOY-Bi/Noy-Nachos/test/SerialTestSend.c">
+			<Option target="Noy_Nachos"/>
+		</Unit>
+		<Unit filename="/home/boby/Documents/M1/NOY-Bi/Noy-Nachos/test/halt.c">
+			<Option target="Noy_Nachos"/>
+		</Unit>
+		<Unit filename="/home/boby/Documents/M1/NOY-Bi/Noy-Nachos/test/hello.c">
+			<Option target="Noy_Nachos"/>
+		</Unit>
+		<Unit filename="/home/boby/Documents/M1/NOY-Bi/Noy-Nachos/test/matmult.c">
+			<Option target="Noy_Nachos"/>
+		</Unit>
+		<Unit filename="/home/boby/Documents/M1/NOY-Bi/Noy-Nachos/test/semTest.c">
+			<Option target="Noy_Nachos"/>
+		</Unit>
+		<Unit filename="/home/boby/Documents/M1/NOY-Bi/Noy-Nachos/test/shell.c">
+			<Option target="Noy_Nachos"/>
+		</Unit>
+		<Unit filename="/home/boby/Documents/M1/NOY-Bi/Noy-Nachos/test/sort.c">
+			<Option target="Noy_Nachos"/>
+		</Unit>
+		<Unit filename="/home/boby/Documents/M1/NOY-Bi/Noy-Nachos/test/tty_rec.c">
+			<Option target="Noy_Nachos"/>
+		</Unit>
+		<Unit filename="/home/boby/Documents/M1/NOY-Bi/Noy-Nachos/userlib/libnachos.c">
+			<Option target="Noy_Nachos"/>
+		</Unit>
+		<Unit filename="/home/boby/Documents/M1/NOY-Bi/Noy-Nachos/userlib/libnachos.h">
+			<Option target="Noy_Nachos"/>
+		</Unit>
+		<Unit filename="/home/boby/Documents/M1/NOY-Bi/Noy-Nachos/userlib/syscall.h">
+			<Option target="Noy_Nachos"/>
+		</Unit>
+		<Unit filename="/home/boby/Documents/M1/NOY-Bi/Noy-Nachos/utility/bitmap.cc">
+			<Option target="Noy_Nachos"/>
+		</Unit>
+		<Unit filename="/home/boby/Documents/M1/NOY-Bi/Noy-Nachos/utility/bitmap.h">
+			<Option target="Noy_Nachos"/>
+		</Unit>
+		<Unit filename="/home/boby/Documents/M1/NOY-Bi/Noy-Nachos/utility/config.cc">
+			<Option target="Noy_Nachos"/>
+		</Unit>
+		<Unit filename="/home/boby/Documents/M1/NOY-Bi/Noy-Nachos/utility/config.h">
+			<Option target="Noy_Nachos"/>
+		</Unit>
+		<Unit filename="/home/boby/Documents/M1/NOY-Bi/Noy-Nachos/utility/list.h">
+			<Option target="Noy_Nachos"/>
+		</Unit>
+		<Unit filename="/home/boby/Documents/M1/NOY-Bi/Noy-Nachos/utility/objid.h">
+			<Option target="Noy_Nachos"/>
+		</Unit>
+		<Unit filename="/home/boby/Documents/M1/NOY-Bi/Noy-Nachos/utility/stats.cc">
+			<Option target="Noy_Nachos"/>
+		</Unit>
+		<Unit filename="/home/boby/Documents/M1/NOY-Bi/Noy-Nachos/utility/stats.h">
+			<Option target="Noy_Nachos"/>
+		</Unit>
+		<Unit filename="/home/boby/Documents/M1/NOY-Bi/Noy-Nachos/utility/utility.cc">
+			<Option target="Noy_Nachos"/>
+		</Unit>
+		<Unit filename="/home/boby/Documents/M1/NOY-Bi/Noy-Nachos/utility/utility.h">
+			<Option target="Noy_Nachos"/>
+		</Unit>
+		<Unit filename="/home/boby/Documents/M1/NOY-Bi/Noy-Nachos/vm/pagefaultmanager.cc">
+			<Option target="Noy_Nachos"/>
+		</Unit>
+		<Unit filename="/home/boby/Documents/M1/NOY-Bi/Noy-Nachos/vm/pagefaultmanager.h">
+			<Option target="Noy_Nachos"/>
+		</Unit>
+		<Unit filename="/home/boby/Documents/M1/NOY-Bi/Noy-Nachos/vm/physMem.cc">
+			<Option target="Noy_Nachos"/>
+		</Unit>
+		<Unit filename="/home/boby/Documents/M1/NOY-Bi/Noy-Nachos/vm/physMem.h">
+			<Option target="Noy_Nachos"/>
+		</Unit>
+		<Unit filename="/home/boby/Documents/M1/NOY-Bi/Noy-Nachos/vm/swapManager.cc">
+			<Option target="Noy_Nachos"/>
+		</Unit>
+		<Unit filename="/home/boby/Documents/M1/NOY-Bi/Noy-Nachos/vm/swapManager.h">
+			<Option target="Noy_Nachos"/>
+		</Unit>
+		<Unit filename="/home/boby/Documents/M1/NOY-Bi/Noy-Nachos/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\"/>
+		</Unit>
+	</Project>
+</CodeBlocks_project_file>

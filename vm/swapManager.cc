@@ -3,13 +3,13 @@
 //  \brief Routines of the swap manager
 //
 //  Copyright (c) 1999-2000 INSA de Rennes.
-//  All rights reserved.  
-//  See copyright_insa.h for copyright notice and limitation 
+//  All rights reserved.
+//  See copyright_insa.h for copyright notice and limitation
 //  of liability and disclaimer of warranty provisions.
 //
 */
 //-----------------------------------------------------------------
- 
+
 #include <unistd.h>
 
 #include "drivers/drvDisk.h"
@@ -26,6 +26,7 @@
  */
 //-----------------------------------------------------------------
 SwapManager::SwapManager() {
+
 
   swap_disk = new DriverDisk((char*)"sem swap disk",(char*)"lock swap disk",
 			     g_machine->diskSwap);
@@ -58,7 +59,7 @@ SwapManager::~SwapManager() {
  */
 //-----------------------------------------------------------------
 int SwapManager::GetFreePage() {
-  
+
   // Scan the page allocation bitmap
   for (int i=0;i<NUM_SECTORS;i++) {
     if (! page_flags->Test(i)) {
@@ -97,7 +98,7 @@ void SwapManager::ReleasePageSwap(int num_sector) {
  */
 //-----------------------------------------------------------------
 void SwapManager::GetPageSwap(int num_sector ,char* SwapPage ) {
-  
+
   DEBUG('v',(char *)"Reading swap page %i for \"%s\"\n",num_sector,
 	g_current_thread->GetName());
   swap_disk->ReadSector(num_sector,SwapPage);
@@ -107,11 +108,11 @@ void SwapManager::GetPageSwap(int num_sector ,char* SwapPage ) {
 /** This method puts a page into the swapping area. If the sector
  *  number given in parameters is set to -1, the swap manager
  *  chooses a free sector and return its number.
- *  
+ *
  *  \param num_sector is the sector number used in the swapping area,
  *  \param SwapPage is the buffer to transfer in the swapping area.
  *  \return The sector number used in the swapping area. This number
- *          is used to update the field disk_page in the translation 
+ *          is used to update the field disk_page in the translation
  *          table entry.
 */
 //-----------------------------------------------------------------
@@ -134,7 +135,7 @@ int SwapManager::PutPageSwap(int num_sector,char *SwapPage) {
       swap_disk->WriteSector(newpage,SwapPage);
       return newpage;
     }
-  }		 
+  }
 }
 
 //-----------------------------------------------------------------
@@ -143,4 +144,4 @@ int SwapManager::PutPageSwap(int num_sector,char *SwapPage) {
 DriverDisk * SwapManager::GetSwapDisk ()
 {
   return swap_disk;
-}   
+}

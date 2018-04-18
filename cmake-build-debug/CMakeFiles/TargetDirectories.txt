@@ -1,0 +1,3 @@
+/home/boby/Documents/M1/NOY-Bi/Noy-Nachos/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+/home/boby/Documents/M1/NOY-Bi/Noy-Nachos/cmake-build-debug/CMakeFiles/edit_cache.dir
+/home/boby/Documents/M1/NOY-Bi/Noy-Nachos/cmake-build-debug/CMakeFiles/Noy_Nachos.dir
