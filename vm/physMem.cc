@@ -4,8 +4,8 @@
 */
 //
 //  Copyright (c) 1999-2000 INSA de Rennes.
-//  All rights reserved.  
-//  See copyright_insa.h for copyright notice and limitation 
+//  All rights reserved.
+//  See copyright_insa.h for copyright notice and limitation
 //  of liability and disclaimer of warranty provisions.
 //-----------------------------------------------------------------
 
@@ -54,14 +54,14 @@ PhysicalMemManager::~PhysicalMemManager() {
 */
 //-----------------------------------------------------------------
 void PhysicalMemManager::RemovePhysicalToVirtualMapping(long num_page) {
-  
-  // Check that the page is not already free 
+
+  // Check that the page is not already free
   ASSERT(!tpr[num_page].free);
 
   // Update the physical page table entry
   tpr[num_page].free=true;
   tpr[num_page].locked=false;
-  if (tpr[num_page].owner->translationTable!=NULL) 
+  if (tpr[num_page].owner->translationTable!=NULL)
     tpr[num_page].owner->translationTable->clearBitValid(tpr[num_page].virtualPage);
 
   // Insert the page in the free list
@@ -104,7 +104,7 @@ void PhysicalMemManager::ChangeOwner(long numPage, Thread* owner) {
 }
 
 //-----------------------------------------------------------------
-// PhysicalMemManager::AddPhysicalToVirtualMapping 
+// PhysicalMemManager::AddPhysicalToVirtualMapping
 //
 /*! This method returns a new physical page number. If there is no
 //  page available, it evicts one page (page replacement algorithm).
@@ -118,11 +118,31 @@ void PhysicalMemManager::ChangeOwner(long numPage, Thread* owner) {
 //  \return A new physical page number.
 */
 //-----------------------------------------------------------------
-int PhysicalMemManager::AddPhysicalToVirtualMapping(AddrSpace* owner,int virtualPage) 
+int PhysicalMemManager::AddPhysicalToVirtualMapping(AddrSpace* owner,int virtualPage)
 {
+  #ifndef ETUDIANTS_TP
   printf("**** Warning: function AddPhysicalToVirtualMapping is not implemented\n");
   exit(-1);
   return (0);
+  #endif
+
+  #ifdef ETUDIANTS_TP
+  DEBUG('v', (char *)"Trying to find free page\n");
+  int pageNumber = FindFreePage();
+
+  if (pageNumber == -1) {
+    DEBUG('v', (char *)"No free pages => page eviction started\n");
+    pageNumber = EvictPage();
+  }
+
+  tpr[pageNumber].locked = true;
+  tpr[pageNumber].virtualPage = virtualPage;
+  tpr[pageNumber].free = false;
+  tpr[pageNumber].owner = owner;
+
+  UnlockPage(pageNumber);
+  return pageNumber;
+  #endif
 }
 
 //-----------------------------------------------------------------
@@ -143,13 +163,13 @@ int PhysicalMemManager::FindFreePage() {
 
   // Update statistics
   g_current_thread->GetProcessOwner()->stat->incrMemoryAccess();
-  
+
   // Get a page from the free list
   page = (int64_t)free_page_list.Remove();
-  
+
   // Check that the page is really free
   ASSERT(tpr[page].free);
-  
+
   // Update the physical page table
   tpr[page].free = false;
 
@@ -166,9 +186,46 @@ int PhysicalMemManager::FindFreePage() {
 */
 //-----------------------------------------------------------------
 int PhysicalMemManager::EvictPage() {
+
+  #ifndef ETUDIANTS_TP
   printf("**** Warning: page replacement algorithm is not implemented yet\n");
     exit(-1);
     return (0);
+  #endif
+
+  #ifdef ETUDIANTS_TP
+    i_clock = 0;
+    bool foundPage = false;
+    while (!foundPage) {
+        if (tpr[i_clock].locked == false) {
+            DEBUG('v', (char *)"Unlocked page found\n");
+            if (g_machine->mmu->translationTable->getBitU(tpr[i_clock].virtualPage) == 0) {
+                DEBUG('v', (char *)"Page's U bit not set, taking\n");
+                foundPage = true;
+            } else {
+                DEBUG('v', (char*)"Page's U bit set, don't take but set it\n");
+                g_machine->mmu->translationTable->clearBitU(tpr[i_clock].virtualPage);
+            }
+        }
+        if (!foundPage) {
+            i_clock = (i_clock + 1) % g_cfg->NumPhysPages;
+        }
+    }
+
+    int addrVirt = tpr[i_clock].virtualPage;
+    if (g_machine->mmu->translationTable->getBitM(addrVirt) == 1) {
+        DEBUG('v', (char*) "Requested page has been modified, saving to swap");
+        int newAddr = g_swap_manager->PutPageSwap(g_machine->mmu->translationTable->getAddrDisk(addrVirt),(char*)g_machine->mmu->translationTable->getPhysicalPage(addrVirt));
+        if (g_machine->mmu->translationTable->getAddrDisk(addrVirt) == -1) {
+            g_machine->mmu->translationTable->setAddrDisk(addrVirt, newAddr);
+        }
+        g_machine->mmu->translationTable->setBitSwap(addrVirt);
+        g_machine->mmu->translationTable->clearBitValid(addrVirt);
+    }
+
+    return i_clock;
+
+  #endif
 }
 
 //-----------------------------------------------------------------
